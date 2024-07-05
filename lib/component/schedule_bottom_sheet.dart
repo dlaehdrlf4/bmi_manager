@@ -91,11 +91,13 @@ class _Content extends StatelessWidget {
   }
 }
 
-typedef OnColorSelected = void Function(Color color);
+typedef OnColorSelected = void Function(Color color); // 이거랑 final Function(Color color) onTap; 이거랑 같은동작을 한다.
 
 class _Categorys extends StatelessWidget {
   final Color selectedColor;
-  final VoidCallback(Color color) onTap;
+  //상위 위젯에 있는 onTap을 넘겨주고 상위 위젯의 함수를 실행시켜 UI를 렌더링 한다.
+  final OnColorSelected onTap;
+
   const _Categorys({super.key, required this.selectedColor, required this.onTap});
 
   @override
