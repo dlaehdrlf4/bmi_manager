@@ -1,4 +1,4 @@
-package com.example.bmi_manager
+package com.gil.mengmanager
 
 import io.flutter.embedding.android.FlutterActivity
 

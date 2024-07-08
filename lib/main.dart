@@ -1,5 +1,6 @@
 import 'package:bmi_manager/screen/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -7,6 +8,7 @@ void main() async {
   //flutter 프레임워크를 사용할수 있다 준비 단계
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting();
+  await dotenv.load(fileName: 'asset/config/.env');
 
   runApp(const MyApp());
 }
