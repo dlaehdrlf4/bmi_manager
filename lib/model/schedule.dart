@@ -1,9 +1,29 @@
+import 'dart:ui';
+
 import 'package:drift/drift.dart';
 
-class Schedules extends Table {
-  IntColumn get id => integer().autoIncrement()(); // PRIMARY KEY, 정수 열
-  TextColumn get content => text()(); // 내용, 글자 열
-  DateTimeColumn get date => dateTime()(); // 일정 날짜, 날짜 열
-  IntColumn get startTime => integer()(); // 시작시간
-  IntColumn get endTime => integer()(); // 종료시간
+class Schedule {
+  //식별 ID
+  final int id;
+  //시작 시간
+  final int startTime;
+  //종료 시간
+  final int endTime;
+  //일정내용
+  final String content;
+  //날짜
+  final DateTime date;
+  //카테고리
+  final Color color;
+  //일정 생성날짜시간
+  final DateTime createdAt;
+
+  Schedule(
+      {required this.id,
+      required this.startTime,
+      required this.endTime,
+      required this.content,
+      required this.date,
+      required this.color,
+      required this.createdAt});
 }

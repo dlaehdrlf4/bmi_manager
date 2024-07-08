@@ -3,19 +3,24 @@ import 'package:bmi_manager/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleCard extends StatelessWidget {
-  final DateTime startTime;
-  final DateTime endTime;
+  final int startTime;
+  final int endTime;
   final String content;
   final Color color;
 
   const ScheduleCard(
-      {required this.startTime, required this.endTime, required this.content, super.key, required this.color});
+      {required this.startTime,
+      required this.endTime,
+      required this.content,
+      super.key,
+      required this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:
-          BoxDecoration(border: Border.all(color: PRIMARY_COLOR!, width: 1), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+          border: Border.all(color: PRIMARY_COLOR!, width: 1),
+          borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: IntrinsicHeight(
@@ -25,12 +30,18 @@ class ScheduleCard extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    '${startTime.hour.toString().padLeft(2, '0')}:00',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: PRIMARY_COLOR, fontSize: 16),
+                    '${startTime.toString().padLeft(2, '0')}:00',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: PRIMARY_COLOR,
+                        fontSize: 16),
                   ),
                   Text(
-                    '${endTime.hour.toString().padLeft(2, '0')}:00',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: PRIMARY_COLOR, fontSize: 10),
+                    '${endTime.toString().padLeft(2, '0')}:00',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: PRIMARY_COLOR,
+                        fontSize: 10),
                   ),
                 ],
               ),
