@@ -6,11 +6,11 @@ final DARK_GREY_COLOR = Colors.grey[600];
 final TEXT_FIELD_FILL_COLOR = Colors.grey[300];
 
 final categoryColor = [
-  Color(0xFFF44336),
-  Color(0xFFFF9800),
-  Color(0xFFFFF838),
-  Color(0xFFFCAF50),
-  Color(0xFF2196F3),
-  Color(0xFF3F5185),
-  Color(0xFF9C2780),
+  'FFF44336',
+  'FFFF9800',
+  'FFFFF838',
+  'FFFCAF50',
+  'FF2196F3',
+  'FF3F5185',
+  'FF9C2780',
 ];

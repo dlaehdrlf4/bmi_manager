@@ -6,21 +6,16 @@ class ScheduleCard extends StatelessWidget {
   final int startTime;
   final int endTime;
   final String content;
-  final Color color;
+  final String color;
 
   const ScheduleCard(
-      {required this.startTime,
-      required this.endTime,
-      required this.content,
-      super.key,
-      required this.color});
+      {required this.startTime, required this.endTime, required this.content, super.key, required this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: PRIMARY_COLOR!, width: 1),
-          borderRadius: BorderRadius.circular(8)),
+      decoration:
+          BoxDecoration(border: Border.all(color: PRIMARY_COLOR!, width: 1), borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: IntrinsicHeight(
@@ -31,17 +26,11 @@ class ScheduleCard extends StatelessWidget {
                 children: [
                   Text(
                     '${startTime.toString().padLeft(2, '0')}:00',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: PRIMARY_COLOR,
-                        fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.w600, color: PRIMARY_COLOR, fontSize: 16),
                   ),
                   Text(
                     '${endTime.toString().padLeft(2, '0')}:00',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: PRIMARY_COLOR,
-                        fontSize: 10),
+                    style: TextStyle(fontWeight: FontWeight.w600, color: PRIMARY_COLOR, fontSize: 10),
                   ),
                 ],
               ),
@@ -50,7 +39,7 @@ class ScheduleCard extends StatelessWidget {
               ),
               Expanded(child: Text('$content')),
               Container(
-                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                decoration: BoxDecoration(color: Color(int.parse(color, radix: 16)), shape: BoxShape.circle),
                 width: 16,
                 height: 16,
               )
