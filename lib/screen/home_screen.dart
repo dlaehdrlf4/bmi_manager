@@ -21,8 +21,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  DateTime selectedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime focusedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDay = DateTime.utc(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime focusedDay = DateTime.utc(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  int scheduleLength = 0;
 
   // Map<DateTime, List<Schedule>> schedules = {
   //   DateTime.utc(2024, 7, 3): [
@@ -44,6 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
   //         createdAt: DateTime.now().toUtc()),
   //   ],
   // };
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
             UserAccountsDrawerHeader(
               accountName: Text(
                 '메뉴',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
               accountEmail: Text(''),
               decoration: BoxDecoration(color: Colors.yellow[200]),
@@ -109,9 +118,12 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 8,
             ),
-            const Text(
-              '강아지 백과사전',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: const Text(
+                '강아지 백과사전',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
             ),
             const SizedBox(
               height: 8,
@@ -158,10 +170,14 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           MainCalendar(selectedDay: selectedDay, onDaySelected: onDaySelected),
-          TodayBanner(
-            selectedDate: selectedDay,
-            taskCount: 0,
-          ),
+          StreamBuilder(
+              stream: GetIt.I<AppDatabase>().streamSchedules(selectedDay),
+              builder: (context, snapshot) {
+                return TodayBanner(
+                  selectedDate: selectedDay,
+                  taskCount: !snapshot.hasData ? 0 : snapshot.data!.length,
+                );
+              }),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
@@ -243,7 +259,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   final schedules = snapshot.data!;
                   //final selectedSchedules = schedules.where((e) => e.date.isAtSameMomentAs(selectedDay)).toList();
-
+                  if (schedules.isEmpty) {
+                    return Center(
+                      child: (Text('해당일자에 일정이 없습니다.')),
+                    );
+                  }
                   return ListView.separated(
                     itemBuilder: (context, index) {
                       //final selectedSchedules = schedules[selectedDay]!;
@@ -263,15 +283,33 @@ class _HomeScreenState extends State<HomeScreen> {
                           //GetIt.I<AppDatabase>().removeSchedule(schedule.id);
                         },
                         confirmDismiss: (direction) async {
-                          await GetIt.I<AppDatabase>().removeSchedule(schedule.id);
+                          await GetIt.I<AppDatabase>()
+                              .removeSchedule(schedule.id);
                           // setState(() {});
                           return true;
                         },
-                        child: ScheduleCard(
-                            startTime: schedule.startTime,
-                            endTime: schedule.endTime,
-                            content: schedule.content,
-                            color: schedule.color),
+                        child: GestureDetector(
+                          onTap: () async {
+                            await showModalBottomSheet<ScheduleTable>(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (_) {
+                                return ScheduleBottomSheet(
+                                  selectedDay: selectedDay,
+                                  id: schedule.id,
+                                );
+                              },
+                            ).then((value) {
+                              //stream 빌드를 사용하면 아래 코드를 필요할 필요가 없다.
+                              //setState(() {});
+                            });
+                          },
+                          child: ScheduleCard(
+                              startTime: schedule.startTime,
+                              endTime: schedule.endTime,
+                              content: schedule.content,
+                              color: schedule.color),
+                        ),
                       );
                     },
                     itemCount: schedules.length,
@@ -317,7 +355,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool selectedDayPredicate(date) {
-    return date.year == selectedDay.year && date.month == selectedDay.month && date.day == selectedDay.day;
+    return date.year == selectedDay.year &&
+        date.month == selectedDay.month &&
+        date.day == selectedDay.day;
   }
 
   Future<void> showMessage(int idx) async {

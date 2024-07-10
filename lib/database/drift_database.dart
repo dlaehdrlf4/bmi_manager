@@ -14,11 +14,17 @@ part 'drift_database.g.dart';
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
-  Stream<List<ScheduleTableData>> streamSchedules(DateTime date) => (select(scheduleTable)
+  Future<ScheduleTableData> getScheduleById(int id) =>
+      (select(scheduleTable)..where((tbl) => tbl.id.equals(id))).getSingle();
+
+  Stream<List<ScheduleTableData>> streamSchedules(DateTime date) => (select(
+          scheduleTable)
         ..where((table) => table.date.equals(date))
         ..orderBy([
-          (table) => OrderingTerm(expression: table.startTime, mode: OrderingMode.asc),
-          (table) => OrderingTerm(expression: table.endTime, mode: OrderingMode.asc)
+          (table) =>
+              OrderingTerm(expression: table.startTime, mode: OrderingMode.asc),
+          (table) =>
+              OrderingTerm(expression: table.endTime, mode: OrderingMode.asc)
         ]))
       .watch(); // watch 계속 반환하는 stream을 반환한다
 
@@ -28,7 +34,9 @@ class AppDatabase extends _$AppDatabase {
   Future<DateTime?> getDate(int idx) async {
     final selectQuery = select(scheduleTable)
       ..where((table) => table.selectedCategory.equals(idx))
-      ..orderBy([(t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)])
+      ..orderBy([
+        (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)
+      ])
       ..limit(1);
 
     final result = await selectQuery.getSingleOrNull();
@@ -40,15 +48,18 @@ class AppDatabase extends _$AppDatabase {
   // return selectQuery.get();
   //select하면 데이터를 가져올수 있다.
 
-  Future<int> createSchedule(ScheduleTableCompanion data) => into(scheduleTable).insert(
+  Future<int> createSchedule(ScheduleTableCompanion data) =>
+      into(scheduleTable).insert(
         data,
       ); //ScheduleTableCompanion 데이터 생성, 데이터 업데이트할때 사용
 
-  Future<int> removeSchedule(int id) => (delete(scheduleTable)..where((table) => table.id.equals(id))).go();
+  Future<int> removeSchedule(int id) =>
+      (delete(scheduleTable)..where((table) => table.id.equals(id))).go();
 
   //업데이트
   Future<int> updateScheduleById(int id, ScheduleTableCompanion data) =>
-      (update(scheduleTable)..where((table) => table.id.equals(id))).write(data);
+      (update(scheduleTable)..where((table) => table.id.equals(id)))
+          .write(data);
 
   @override
   int get schemaVersion => 1;

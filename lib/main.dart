@@ -5,13 +5,14 @@ import 'package:bmi_manager/screen/home_screen.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   //flutter 프레임워크를 사용할수 있다 준비 단계
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting();
   await dotenv.load(fileName: 'asset/config/.env');
 
@@ -29,6 +30,10 @@ void main() async {
 
   // print('--------------');
   // print(resp);
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Future.delayed(const Duration(seconds: 1));
+  FlutterNativeSplash.remove();
+  //Firebase.initializeApp().whenComplete(() => {FlutterNativeSplash.remove()});
 
   runApp(const MyApp());
 }
